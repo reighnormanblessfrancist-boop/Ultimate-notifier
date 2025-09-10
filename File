@@ -1,0 +1,61 @@
+-- Ultimate Notifier ESP
+-- LocalScript in StarterPlayerScripts
+
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+
+-- Utility: Roblox notification
+local function notify(text)
+    StarterGui:SetCore("SendNotification", {
+        Title = "Ultimate Notifier";
+        Text = text;
+        Duration = 4,
+    })
+end
+
+-- Utility: create ESP tag above the player
+local function createTag(player, text)
+    if not player.Character then return end
+    local head = player.Character:FindFirstChild("Head")
+    if not head then return end
+
+    if head:FindFirstChild("UltimateTag") then
+        head.UltimateTag:Destroy()
+    end
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "UltimateTag"
+    billboard.Size = UDim2.new(0, 150, 0, 50)
+    billboard.StudsOffset = Vector3.new(0, 3, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Parent = head
+
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, 0, 1, 0)
+    label.BackgroundTransparency = 1
+    label.TextColor3 = Color3.fromRGB(0, 255, 255)
+    label.TextStrokeTransparency = 0.2
+    label.Font = Enum.Font.GothamBold
+    label.TextScaled = true
+    label.Text = text
+    label.Parent = billboard
+end
+
+-- Function: handle ultimate usage
+local function onUltimateUsed(player, ultimateName)
+    notify(player.Name .. " has used ultimate: " .. ultimateName)
+    createTag(player, ultimateName .. "!!")
+    
+    -- Remove tag after 5 seconds
+    task.delay(5, function()
+        if player.Character and player.Character:FindFirstChild("Head") then
+            local tag = player.Character.Head:FindFirstChild("UltimateTag")
+            if tag then tag:Destroy() end
+        end
+    end)
+end
+
+-- Example hook: replace with actual RemoteEvent from the game
+-- game.ReplicatedStorage.Remotes.UltimateUsed.OnClientEvent:Connect(function(player, ultimateName)
+--     onUltimateUsed(player, ultimateName)
+-- end)
